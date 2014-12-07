@@ -16,8 +16,9 @@ This example code is in the public domain.
 
  */
 #include "pitches.h"
-#define REST 0
+#include "EventFramework.h"
 
+#define REST 0
 static const int interNoteDelay = 20;
 static const int measure = 800;
 //static const int measure = 2400;
@@ -31,6 +32,7 @@ static const int dotted_eighth = (measure*3)/16-interNoteDelay;
 static const int dotted_quarter = (measure*3)/8-interNoteDelay;
 static const int dotted_half = (measure*3)/4-interNoteDelay;
 
+typedef unsigned long ulong; // unsigned long int gets a bit tedious
 
 typedef struct {
   int  note;      // pitch or 0 for a rest
@@ -96,6 +98,33 @@ Phrase  Jingle_Bells[] = {
     PHRASE(Jingle_Bells_chorus),
     PHRASE(Jingle_Bells_end2),
 };
+
+
+
+class NotePlayerTimer:
+    public efl::Timer  // periodic timer by default
+{
+private:
+    virtual bool callback(ulong late) {
+        return true;
+    };
+    int     noteIndex;      // current position in the phrase
+    int     phraseIndex;    // phrase we are currently working on
+    int     phraseCount;    // how many phrases make up this song
+    bool    playing;        // provide easy way to tell if we're playiing something
+public:
+  //Timer(ulong c=1, ulong p=0): // default constructor
+  //counter(c),period(p) {       // we want period to be zero as each note will be a different length
+    NotePlayerTimer(ulong c=1):
+        efl::Timer(c,0), { // start as one shot
+    };
+    void play( Phrase *phrases, int phraseCount);
+    void stop();
+    bool isPlaying;
+    
+};
+
+
 
 void setup() {
 }
