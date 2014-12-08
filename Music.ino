@@ -20,8 +20,8 @@ This example code is in the public domain.
 
 #define REST 0
 static const int interNoteDelay = 20;
-static const int measure = 800;
 static const int speaker1 = 6;
+static const int measure = 800;
 //static const int measure = 2400;
 
 static const int whole = measure-interNoteDelay;
@@ -40,12 +40,16 @@ typedef struct {
   int  duration;  // duration of the note
 } Note;
 
-// a song is a sequence of phrases. Many are repeatred so instead of just
+// a song is a sequence of phrases. Many are repeated so instead of just
 // slavishly copying them, we write them once and reuse them as needed.
 typedef struct {
   Note* notes;      // an array of notes
   int   noteCount;  // number of notes in the array
 } Phrase;
+
+// Some macros to make construction of songs a little easier
+#define ARRAY_COUNT(X) (sizeof(X)/sizeof(X[0]))
+#define PHRASE(X) {X, ARRAY_COUNT(X)}
 
 
 Note  Jingle_Bells_melody_1[] = {
@@ -85,10 +89,6 @@ Note  Jingle_Bells_end2[] = {
   { NOTE_G4, whole },
 };
   
-
-#define ARRAY_COUNT(X) (sizeof(X)/sizeof(X[0]))
-#define PHRASE(X) {X, ARRAY_COUNT(X)}
-  
 Phrase  Jingle_Bells[] = {
     PHRASE(Jingle_Bells_melody_1),
     PHRASE(Jingle_Bells_melody_2),
@@ -107,14 +107,16 @@ class NotePlayerTimer:
 {
 private:
     virtual bool callback(ulong late) {
+        char buff[30];
+
         if( pSong == 0 )     // a null pointer would be bad! (should assert())
             return false;
         if( !playing )
             return false;       // disable the timer
-        noteIndex++;            // next note to play
         if( pSong[phraseIndex].noteCount > noteIndex ) { // still note(s) to play?
-            setCounter(pSong[phraseIndex].notes[noteIndex].duration+interNoteDelay); // timer to start the next note
-            tone(speaker1, pSong[phraseIndex].notes[noteIndex].duration, pSong->notes[phraseIndex].duration);
+            setPeriod(pSong[phraseIndex].notes[noteIndex].duration+interNoteDelay); // timer to start the next note
+            tone(speaker1, pSong[phraseIndex].notes[noteIndex].note, pSong[phraseIndex].notes[noteIndex].duration);
+            noteIndex++;            // next note to play
             return true;
         }
         else {
@@ -122,8 +124,9 @@ private:
             if( phraseIndex < phraseCount ) {       // another phrase?
                 noteIndex=0;                        // index the first note in the new phrase
                 if( pSong[phraseIndex].noteCount > noteIndex ) { // still note(s) to play?
-                    setCounter(pSong[phraseIndex].notes[noteIndex].duration+interNoteDelay); // timer to start the next note
-                    tone(speaker1, pSong->notes[phraseIndex].note, pSong->notes[phraseIndex].duration);
+                    setPeriod(pSong[phraseIndex].notes[noteIndex].duration+interNoteDelay); // timer to start the next note
+                    tone(speaker1, pSong[phraseIndex].notes[noteIndex].note, pSong[phraseIndex].notes[noteIndex].duration);
+                    noteIndex++;            // next note to play
                     return true;
                 }
                 else { // odd situation - phrase with no notes
@@ -146,15 +149,16 @@ private:
     bool    playing;        // provide easy way to tell if we're playiing something
     Phrase* pSong;          // pointer to the song we're playing right now.
 public:
-  //Timer(ulong c=1, ulong p=0): // default constructor
-  //counter(c),period(p) {       // we want period to be zero as each note will be a different length
     NotePlayerTimer(ulong c=1):
-        efl::Timer(c,0) { // start as one shot
+        efl::Timer(c,1) {   // start as tick periodic. We'll update the period based on the note duration.
     };
-    void play( Phrase *phrases, int sizeofPhrases) {
+    void play( Phrase *phrases, int sizeofPhrases, efl::LL<efl::Timer> &listElt) {
+        char buff[30];
         pSong = phrases;
         phraseCount = sizeofPhrases;
-        noteIndex=0;
+        playing = true;
+        phraseIndex = noteIndex=0;
+        listElt.add();
         return;
     }
     void stop() { playing = false; };
@@ -181,37 +185,24 @@ public:
     };
 };
 
-HeartbeatTimer  heartBeat( 0  ); // not sure why but removing the first ctor arg causes compiler error
-efl::LL<efl::Timer> hb(&heartBeat);
+  HeartbeatTimer  heartBeat( 0  );          // not sure why but removing the first ctor arg causes compiler error
+  efl::LL<efl::Timer> hb(&heartBeat);
 
-NotePlayerTimer notePlayer(0);
-efl::LL<efl::Timer> np(&notePlayer);
+  NotePlayerTimer notePlayer(0);
+  efl::LL<efl::Timer> np(&notePlayer);
 
 
 void setup() {
-    Serial.begin(115200);
-    hb.add();
-    np.add();
+  Serial.begin(115200);
+  hb.add();
 }
 
 void loop() {
-    efl::LL<efl::Timer>::doItems();
-/*
-  for(int i=0; i<ARRAY_COUNT(Jingle_Bells); i++ ) {         // loop over the phrases
-    for( int j=0; j<Jingle_Bells[i].noteCount; j++ ) {      // loop over notes and rests in each phrase
-      if( Jingle_Bells[i].notes[j].note )                   // if a note, play it
-        tone(speaker1, Jingle_Bells[i].notes[j].note, Jingle_Bells[i].notes[j].duration);
-      else                                                  // else a rest, just delay
-        delay(Jingle_Bells[i].notes[j].duration);
-      delay(interNoteDelay);                                // provide a little gap between each note
-      delay(Jingle_Bells[i].notes[j].duration);             // delay until time to play the next note
-    }
-  }
-  */
-
+  efl::LL<efl::Timer>::doItems();
   if( !notePlayer.isPlaying() ) {
-    notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells));
-    Serial.print("playing\n");
+    delay(1000);
+    efl::LL<efl::Timer>::doItems(); 
+    notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
   }
 
   delay(1);
