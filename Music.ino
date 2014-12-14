@@ -104,13 +104,34 @@ static const Phrase Jingle_Bells[] = {
 };
 
 static const Note  Seven_Nation_Army_notes[] = {
-  { NOTE_E4, dotted_half },
-  { NOTE_E4, quarter },
-  { NOTE_G4, eighth },
-  { NOTE_E4, quarter },
-  { NOTE_D4, eighth },
-  { NOTE_C4, half },
-  { NOTE_B3, quarter },
+#if 0
+  { NOTE_E3, 738 },
+  { NOTE_E3, 320 },
+  { NOTE_G3, 320 },
+  { NOTE_E3, 390 },
+  { NOTE_D3, 340 },
+  { NOTE_C3, 835 },
+  { NOTE_B2, 835 },
+#else
+  { NOTE_C3, 50 }, { REST, 200 }, { NOTE_E3, 50 }, { REST, 200 }, { NOTE_G3, 50 }, { REST, 200 },
+  { NOTE_C3, 50 }, { REST, 200 }, { NOTE_F3, 50 }, { REST, 200 }, { NOTE_A3, 50 }, { REST, 200 },
+  { REST, 30 },
+  { NOTE_C3, 75 },  { NOTE_E3, 75 }, { NOTE_G3, 75 },
+  { NOTE_C3, 60 },  { NOTE_F3, 60 }, { NOTE_A3, 60 },
+  { NOTE_C3, 50 },  { NOTE_E3, 50 }, { NOTE_G3, 50 },
+  { NOTE_C4, 50 },  { NOTE_E4, 50 }, { NOTE_G4, 50 },
+  { NOTE_C3, 50 },  { NOTE_F3, 50 }, { NOTE_A3, 50 },
+  { NOTE_C4, 50 },  { NOTE_F4, 50 }, { NOTE_A4, 50 },
+  { NOTE_C3, 50 },  { NOTE_E3, 50 }, { NOTE_G3, 50 },
+  { NOTE_C3, 50 },  { NOTE_F3, 50 }, { NOTE_A3, 50 },
+  { NOTE_C3, 40 },  { NOTE_F3, 40 }, { NOTE_A3, 40 },
+  { NOTE_C4, 40 },  { NOTE_F4, 40 }, { NOTE_A4, 40 },
+  { NOTE_C5, 30 },  { NOTE_F5, 30 }, { NOTE_A5, 30 },
+  { NOTE_C4, 25 },  { NOTE_F4, 25 }, { NOTE_A4, 25 },
+  { NOTE_C6, 20 },  { NOTE_F6, 20 }, { NOTE_A6, 20 },
+  { NOTE_C7, 15 },  { NOTE_C6, 15 },  { NOTE_C5, 15 },  { NOTE_C4, 15 },  { NOTE_C3, 15 },  { NOTE_C2, 120 },
+  { REST, 30*1000 },
+#endif
 };
 
 static const Phrase Seven_Nation_Army[] = {
@@ -222,8 +243,8 @@ void loop() {
   if ( !notePlayer.isPlaying() ) {
     delay(1000);
     efl::LL<efl::Timer>::doItems();
- //   notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
- notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
+    notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
+ //notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
   }
 
   delay(1);
