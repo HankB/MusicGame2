@@ -20,7 +20,7 @@ This example code is in the public domain.
 
 #define REST 0
 static const int interNoteDelay = 20;
-static const int speaker1 = 6;
+static const int speaker1 = 10;
 static const int measure = 800;
 //static const int measure = 2400;
 
@@ -104,15 +104,30 @@ static const Phrase Jingle_Bells[] = {
 };
 
 static const Note  Seven_Nation_Army_notes[] = {
-#if 0
-  { NOTE_E3, 738 },
-  { NOTE_E3, 320 },
-  { NOTE_G3, 320 },
-  { NOTE_E3, 390 },
+  { NOTE_E3, 730 },
+  { NOTE_E3, 280 },
+  { NOTE_G3, 310 },
+  { NOTE_E3, 370 },
   { NOTE_D3, 340 },
-  { NOTE_C3, 835 },
+  { NOTE_C3, 900 },
   { NOTE_B2, 835 },
-#else
+  { REST,    300 },
+  { NOTE_E3, 730 },
+  { NOTE_E3, 310 },
+  { NOTE_G3, 310 },
+  { NOTE_E3, 390 },
+  { NOTE_D3, 320 },
+  { NOTE_C3, 320 },
+  { NOTE_D3, 320 },
+  { NOTE_C3, 330 },
+  { NOTE_B2, 700 },
+};
+
+static const Phrase Seven_Nation_Army[] = {
+    PHRASE(Seven_Nation_Army_notes),
+};
+
+static const Note  Toms_Flourish_Notes[] = {
   { NOTE_C3, 50 }, { REST, 200 }, { NOTE_E3, 50 }, { REST, 200 }, { NOTE_G3, 50 }, { REST, 200 },
   { NOTE_C3, 50 }, { REST, 200 }, { NOTE_F3, 50 }, { REST, 200 }, { NOTE_A3, 50 }, { REST, 200 },
   { REST, 30 },
@@ -129,13 +144,12 @@ static const Note  Seven_Nation_Army_notes[] = {
   { NOTE_C5, 30 },  { NOTE_F5, 30 }, { NOTE_A5, 30 },
   { NOTE_C4, 25 },  { NOTE_F4, 25 }, { NOTE_A4, 25 },
   { NOTE_C6, 20 },  { NOTE_F6, 20 }, { NOTE_A6, 20 },
-  { NOTE_C7, 15 },  { NOTE_C6, 15 },  { NOTE_C5, 15 },  { NOTE_C4, 15 },  { NOTE_C3, 15 },  { NOTE_C2, 120 },
-  { REST, 30*1000 },
-#endif
+  { NOTE_C7, 15 },  { NOTE_C6, 15 },  { NOTE_C5, 15 },  { NOTE_C4, 15 },  { NOTE_C3, 15 },  { NOTE_C6, 120 },
+  { REST, 3*1000 },
 };
 
-static const Phrase Seven_Nation_Army[] = {
-    PHRASE(Seven_Nation_Army_notes),
+static const Phrase Toms_Flourish[] = {
+    PHRASE(Toms_Flourish_Notes),
 };
 
 
@@ -145,7 +159,6 @@ class NotePlayerTimer:
   private:
     virtual bool callback(ulong late) {
       char buff[30];
-
       if ( pSong == 0 )    // a null pointer would be bad! (should assert())
         return false;
       if ( !playing )
@@ -239,13 +252,29 @@ void setup() {
 }
 
 void loop() {
-  efl::LL<efl::Timer>::doItems();
+  static int state=0;
   if ( !notePlayer.isPlaying() ) {
     delay(1000);
     efl::LL<efl::Timer>::doItems();
-    notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
- //notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
+    if( state >= 3)
+      state = 0;
+    switch(state) {
+    case 0:
+      notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
+      break;
+    case 1:
+      notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
+      break;
+    case 2:
+    notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
+      break;
+    default:
+      state = 0;
+    }
+    state++;
+      
   }
+  efl::LL<efl::Timer>::doItems();
 
   delay(1);
 }
