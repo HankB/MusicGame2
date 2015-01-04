@@ -21,7 +21,7 @@ This example code is in the public domain.
 #define REST 0
 static const int interNoteDelay = 20;
 static const int speaker1 = 10;
-static const int measure = 800;
+static const int measure = 1000;
 //static const int measure = 2400;
 
 static const int whole = measure - interNoteDelay;
@@ -152,7 +152,38 @@ static const Phrase Toms_Flourish[] = {
     PHRASE(Toms_Flourish_Notes),
 };
 
+#define S1(n) (n*8/6)
+static const Note Ode_to_Joy_Notes_1[] {
+    { NOTE_B3, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_C4, S1(quarter) }, { NOTE_D4, S1(quarter) }, 
+    { NOTE_D4, S1(quarter) }, { NOTE_C4, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_A3, S1(quarter) }, 
+    { NOTE_G3, S1(quarter) }, { NOTE_G3, S1(quarter) }, { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(quarter) }, 
+};
 
+static const Note Ode_to_Joy_Notes_2[] {
+    { NOTE_B3, S1(dotted_quarter) }, { NOTE_A3, S1(eighth) }, { NOTE_A3, S1(half) }, 
+};
+
+static const Note Ode_to_Joy_Notes_3[] {
+    { NOTE_A3, S1(dotted_quarter) }, { NOTE_G3, S1(eighth) }, { NOTE_G3, S1(half) }, 
+};
+
+static const Note Ode_to_Joy_Notes_4[] {
+    { NOTE_A3, S1(quarter) }, { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_G3, S1(quarter) }, 
+    { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(eighth) }, { NOTE_C4, S1(eighth) }, { NOTE_B3, S1(quarter) }, { NOTE_G3, S1(quarter) }, 
+    { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(eighth) }, { NOTE_C4, S1(eighth) }, { NOTE_B3, S1(quarter) }, { NOTE_A3, S1(quarter) }, 
+    { NOTE_G3, S1(quarter) }, { NOTE_A3, S1(quarter) }, { NOTE_D3, S1(half) }, 
+};
+
+
+static const Phrase Ode_to_Joy[] = {
+    PHRASE(Ode_to_Joy_Notes_1),
+    PHRASE(Ode_to_Joy_Notes_2),
+    PHRASE(Ode_to_Joy_Notes_1),
+    PHRASE(Ode_to_Joy_Notes_3),
+    PHRASE(Ode_to_Joy_Notes_4),
+    PHRASE(Ode_to_Joy_Notes_1),
+    PHRASE(Ode_to_Joy_Notes_3),
+};
 class NotePlayerTimer:
   public efl::Timer  // periodic timer by default
 {
@@ -251,23 +282,32 @@ void setup() {
   hb.add();
 }
 
+#define F1  100
+#define t1  F1
+#define F1  200
+#define t2 F1
+
+
 void loop() {
   static int state=0;
   if ( !notePlayer.isPlaying() ) {
     delay(1000);
     efl::LL<efl::Timer>::doItems();
-    if( state >= 3)
+    if( state >= 4)
       state = 0;
     switch(state) {
     case 0:
-      notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
+      notePlayer.play(Ode_to_Joy, ARRAY_COUNT(Ode_to_Joy), np);
       break;
     case 1:
       notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
       break;
     case 2:
-    notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
+      notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
       break;
+    case 3:
+      notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
+
     default:
       state = 0;
     }
