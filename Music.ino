@@ -184,6 +184,31 @@ static const Phrase Ode_to_Joy[] = {
     PHRASE(Ode_to_Joy_Notes_1),
     PHRASE(Ode_to_Joy_Notes_3),
 };
+
+#define S2(n) (n*5/3)
+static const Note Up_on_the_Housetop_Notes_1[] {
+  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(quarter) },  
+  { NOTE_AS3, S2(quarter) },  { NOTE_D4, S2(quarter) },  { NOTE_F4, S2(half) },  
+  { NOTE_G4, S2(quarter) },  { NOTE_G4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(quarter) },  
+  { NOTE_C4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(half) },  
+  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(eighth) },  { NOTE_D4, S2(eighth) },  
+  { NOTE_AS3, S2(quarter) },  { NOTE_D4, S2(quarter) },  { NOTE_F4, S2(half) },  
+  { NOTE_G4, S2(quarter) },  { NOTE_G4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(eighth) },  { NOTE_F4, S2(eighth) },  { NOTE_D4, S2(quarter) },  
+  { NOTE_C4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_AS3, S2(half) },  
+  { NOTE_DS4, S2(quarter) },  { NOTE_DS4, S2(quarter) },  { NOTE_G4, S2(half) },  
+  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_F4, S2(eighth) },  { NOTE_D4, S2(half) },  
+  { NOTE_C4, S2(quarter) },  { NOTE_C4, S2(quarter) },  { NOTE_DS4, S2(half) },  
+  { NOTE_D4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_F4, S2(eighth) },  { NOTE_AS3, S2(quarter) },  { NOTE_D4, S2(quarter) },  
+  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(quarter) },  
+  { NOTE_DS4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_G4, S2(half) },  
+  { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(eighth) },  { NOTE_D4, S2(eighth) },  
+  { NOTE_C4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_AS3, S2(half) },  
+};
+
+static const Phrase Up_on_the_Housetop[] = {
+  PHRASE(Up_on_the_Housetop_Notes_1),
+};
+
 class NotePlayerTimer:
   public efl::Timer  // periodic timer by default
 {
@@ -293,20 +318,24 @@ void loop() {
   if ( !notePlayer.isPlaying() ) {
     delay(1000);
     efl::LL<efl::Timer>::doItems();
-    if( state >= 4)
+    if( state >= 5)
       state = 0;
     switch(state) {
     case 0:
-      notePlayer.play(Ode_to_Joy, ARRAY_COUNT(Ode_to_Joy), np);
+      notePlayer.play(Up_on_the_Housetop, ARRAY_COUNT(Up_on_the_Housetop), np);
       break;
     case 1:
-      notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
+      notePlayer.play(Ode_to_Joy, ARRAY_COUNT(Ode_to_Joy), np);
       break;
     case 2:
-      notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
+      notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
       break;
     case 3:
+      notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
+      break;
+    case 4:
       notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
+      break;
 
     default:
       state = 0;
