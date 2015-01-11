@@ -16,6 +16,7 @@ This example code is in the public domain.
 
  */
  
+#define ALL 1
  
 #include "pitches.h"
 #include "EventFramework.h"
@@ -29,7 +30,7 @@ This example code is in the public domain.
 
 #define REST 0
 static const int interNoteDelay = 20;
-static const int speaker1 = 10;
+static const int speaker1 = 11;
 static const int measure = 1000;
 //static const int measure = 2400;
 
@@ -116,8 +117,8 @@ static const Phrase Jingle_Bells[] PROGMEM = {
   PHRASE(Jingle_Bells_end2),
 };
 
-#if ALL
-static const Note  Seven_Nation_Army_notes[] = {
+#if defined ALL
+static const Note  Seven_Nation_Army_notes[] PROGMEM  = {
   { NOTE_E3, 730 },
   { NOTE_E3, 280 },
   { NOTE_G3, 310 },
@@ -137,11 +138,11 @@ static const Note  Seven_Nation_Army_notes[] = {
   { NOTE_B2, 700 },
 };
 
-static const Phrase Seven_Nation_Army[] = {
+static const Phrase Seven_Nation_Army[]  PROGMEM  = {
     PHRASE(Seven_Nation_Army_notes),
 };
 
-static const Note  Toms_Flourish_Notes[] = {
+static const Note  Toms_Flourish_Notes[]  PROGMEM = {
   { NOTE_C3, 50 }, { REST, 200 }, { NOTE_E3, 50 }, { REST, 200 }, { NOTE_G3, 50 }, { REST, 200 },
   { NOTE_C3, 50 }, { REST, 200 }, { NOTE_F3, 50 }, { REST, 200 }, { NOTE_A3, 50 }, { REST, 200 },
   { REST, 30 },
@@ -162,26 +163,26 @@ static const Note  Toms_Flourish_Notes[] = {
   { REST, 3*1000 },
 };
 
-static const Phrase Toms_Flourish[] = {
+static const Phrase Toms_Flourish[]  PROGMEM  = {
     PHRASE(Toms_Flourish_Notes),
 };
 
 #define S1(n) (n*8/6)
-static const Note Ode_to_Joy_Notes_1[] {
+static const Note Ode_to_Joy_Notes_1[]  PROGMEM  = {
     { NOTE_B3, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_C4, S1(quarter) }, { NOTE_D4, S1(quarter) }, 
     { NOTE_D4, S1(quarter) }, { NOTE_C4, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_A3, S1(quarter) }, 
     { NOTE_G3, S1(quarter) }, { NOTE_G3, S1(quarter) }, { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(quarter) }, 
 };
 
-static const Note Ode_to_Joy_Notes_2[] {
+static const Note Ode_to_Joy_Notes_2[]  PROGMEM = {
     { NOTE_B3, S1(dotted_quarter) }, { NOTE_A3, S1(eighth) }, { NOTE_A3, S1(half) }, 
 };
 
-static const Note Ode_to_Joy_Notes_3[] {
+static const Note Ode_to_Joy_Notes_3[]  PROGMEM = {
     { NOTE_A3, S1(dotted_quarter) }, { NOTE_G3, S1(eighth) }, { NOTE_G3, S1(half) }, 
 };
 
-static const Note Ode_to_Joy_Notes_4[] {
+static const Note Ode_to_Joy_Notes_4[]  PROGMEM = {
     { NOTE_A3, S1(quarter) }, { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(quarter) }, { NOTE_G3, S1(quarter) }, 
     { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(eighth) }, { NOTE_C4, S1(eighth) }, { NOTE_B3, S1(quarter) }, { NOTE_G3, S1(quarter) }, 
     { NOTE_A3, S1(quarter) }, { NOTE_B3, S1(eighth) }, { NOTE_C4, S1(eighth) }, { NOTE_B3, S1(quarter) }, { NOTE_A3, S1(quarter) }, 
@@ -189,7 +190,7 @@ static const Note Ode_to_Joy_Notes_4[] {
 };
 
 
-static const Phrase Ode_to_Joy[] = {
+static const Phrase Ode_to_Joy[]  PROGMEM = {
     PHRASE(Ode_to_Joy_Notes_1),
     PHRASE(Ode_to_Joy_Notes_2),
     PHRASE(Ode_to_Joy_Notes_1),
@@ -200,7 +201,7 @@ static const Phrase Ode_to_Joy[] = {
 };
 
 #define S2(n) (n*5/3)
-static const Note Up_on_the_Housetop_Notes_1[] {
+static const Note Up_on_the_Housetop_Notes_1[]  PROGMEM  = {
   { NOTE_F4, S2(quarter) },  { NOTE_F4, S2(eighth) },  { NOTE_G4, S2(eighth) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(quarter) },  
   { NOTE_AS3, S2(quarter) },  { NOTE_D4, S2(quarter) },  { NOTE_F4, S2(half) },  
   { NOTE_G4, S2(quarter) },  { NOTE_G4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_D4, S2(quarter) },  
@@ -219,10 +220,10 @@ static const Note Up_on_the_Housetop_Notes_1[] {
   { NOTE_C4, S2(quarter) },  { NOTE_F4, S2(quarter) },  { NOTE_AS3, S2(half) },  
 };
 
-static const Phrase Up_on_the_Housetop[] = {
+static const Phrase Up_on_the_Housetop[]  PROGMEM = {
   PHRASE(Up_on_the_Housetop_Notes_1),
 };
-#endif
+#endif // defined ALL
 
 class NotePlayerTimer:
   public efl::Timer  // periodic timer by default
@@ -337,27 +338,27 @@ void loop() {
     delay(1000);
     efl::LL<efl::Timer>::doItems();
     if( state >= 5)
-      state = 2;
+      state = 0;
     switch(state) {
+#if defined ALL
     case 0:
-#if ALL
       notePlayer.play(Up_on_the_Housetop, ARRAY_COUNT(Up_on_the_Housetop), np);
       break;
     case 1:
       notePlayer.play(Ode_to_Joy, ARRAY_COUNT(Ode_to_Joy), np);
       break;
-#endif
+#endif // defined ALL
     case 2:
       notePlayer.play(Jingle_Bells, ARRAY_COUNT(Jingle_Bells), np);
       break;
-#if ALL
+#if defined ALL
     case 3:
       notePlayer.play(Toms_Flourish, ARRAY_COUNT(Toms_Flourish), np);
       break;
     case 4:
       notePlayer.play(Seven_Nation_Army, ARRAY_COUNT(Seven_Nation_Army), np);
       break;
-#endif
+#endif defined ALL
 
     default:
       //state = 2;
