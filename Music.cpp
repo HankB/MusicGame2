@@ -2,7 +2,7 @@
 
 #define REST 0
 static const int interNoteDelay = 20;
-static const int speaker1 = 11;
+//static const int speaker1 = 11;
 static const int measure = 1000;
 //static const int measure = 2400;
 
@@ -16,6 +16,7 @@ static const int dotted_eighth = (measure * 3) / 16 - interNoteDelay;
 static const int dotted_quarter = (measure * 3) / 8 - interNoteDelay;
 static const int dotted_half = (measure * 3) / 4 - interNoteDelay;
 
+Tone speaker1;
 
 bool NotePlayerTimer::callback(ulong late)
 {
@@ -29,7 +30,7 @@ bool NotePlayerTimer::callback(ulong late)
 	//Serial.print("play ");Serial.print(pSong[phraseIndex].notes[noteIndex].getNote());
 	//Serial.print(" for ");Serial.println(pSong[phraseIndex].notes[noteIndex].getDuration());
 
-        tone(speaker1, pSong[phraseIndex].getNotePtr()[noteIndex].getNote(), pSong[phraseIndex].getNotePtr()[noteIndex].getDuration());
+        speaker1.play( pSong[phraseIndex].getNotePtr()[noteIndex].getNote(), pSong[phraseIndex].getNotePtr()[noteIndex].getDuration());
         noteIndex++;            // next note to play
         return true;
       }
@@ -40,7 +41,7 @@ bool NotePlayerTimer::callback(ulong late)
           noteIndex = 0;                      // index the first note in the new phrase
           if ( pSong[phraseIndex].getNoteCount() > noteIndex ) { // still note(s) to play?
             setPeriod(pSong[phraseIndex].getNotePtr()[noteIndex].getDuration() + interNoteDelay); // timer to start the next note
-            tone(speaker1, pSong[phraseIndex].getNotePtr()[noteIndex].getNote(), pSong[phraseIndex].getNotePtr()[noteIndex].getDuration());
+            speaker1.play( pSong[phraseIndex].getNotePtr()[noteIndex].getNote(), pSong[phraseIndex].getNotePtr()[noteIndex].getDuration());
             noteIndex++;            // next note to play
             return true;
           }

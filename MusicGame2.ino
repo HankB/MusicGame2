@@ -1,3 +1,6 @@
+#include <Tone.h>
+#include "Button.h"
+
 /*
   was: Multiple tone player
   Now: Play some music!
@@ -55,16 +58,17 @@ efl::LL<efl::Timer> np(&notePlayer);
 
 void setup() {
   Serial.begin(115200);
+  speaker1.begin(11); // speaker 1 on pin 11
   hb.add();
-}
+  setupButtonHandling();
+  Serial.println("setup()");
 
-#define F1  100
-#define t1  F1
-#define F1  200
-#define t2 F1
+}
 
 
 void loop() {
+
+#if 0
   static int state=0;
   if ( !notePlayer.isPlaying() ) {
     delay(1000);
@@ -99,7 +103,10 @@ void loop() {
     state++;
       
   }
+#endif  
+
   efl::LL<efl::Timer>::doItems();
+  efl::LL<efl::Digital>::doItems();
 
   delay(1);
 }

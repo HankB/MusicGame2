@@ -2,6 +2,9 @@
 #define MUSIC_H
 #include "pitches.h"
 #include "EventFramework.h"
+#include <Tone.h>
+
+extern Tone speaker1;
 
 #define ALL 1
 
