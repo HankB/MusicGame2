@@ -52,9 +52,6 @@ class HeartbeatTimer:
 HeartbeatTimer  heartBeat(0);          // not sure why but removing the first ctor arg causes compiler error
 efl::LL<efl::Timer> hb(&heartBeat);
 
-NotePlayerTimer notePlayer(0);
-efl::LL<efl::Timer> np(&notePlayer);
-
 
 void setup() {
   Serial.begin(115200);

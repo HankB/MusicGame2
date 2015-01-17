@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <EventFramework.h>
+#include "Music.h"
 
 // first some defines to ID the four buttons used
 #define TR efl::Digital::BIT_8
@@ -15,6 +16,16 @@ extern MyDigital  topRightButton;
 extern MyDigital  topLeftButton;
 extern MyDigital  bottomLeftButton;
 extern MyDigital  bottomRightButton;
+
+// possible states for button processing. Each represents a particular activity 
+// available with the device
+enum ButtonState {
+    PATTERN_SEARCH,
+    PLAY_MUSIC,
+    BUTTON_GAME,
+    HI_LO_GAME,
+};
+
 
 class MyDigital:
 public efl::Digital
@@ -31,13 +42,48 @@ public:
    bool callback (ulong late, efl::Digital::States newState, efl::Digital::States oldState);
 };
 
-// extern MyDigital  topRightButton;
-// extern MyDigital  topLeftButton;
-// extern MyDigital  bottomLeftButton;
-// extern MyDigital  bottomRightButton;
-// 
-// extern efl::LL<efl::Digital> d1, d2, d3, d4;
-
 void setupButtonHandling(void);
+
+class ButtonTimer:
+  public efl::Timer  // periodic timer by default
+{
+  private:
+    virtual bool callback(ulong late);
+  public:
+    ButtonTimer(int x):
+      efl::Timer(10, 10) {
+    };
+    void restart(ulong x) { setCounter(x);};
+    static const ulong buttonPressTimeout = 1000;
+};
+
+
+// Struct to tie a button sequence to a particular action
+class ButtonSeqAction {
+    const char *sequence;       // null terminated sequence of buttons
+public:
+    virtual ButtonState action()const = 0; // action to invoke when sequence met
+    ButtonSeqAction(const char* seq):sequence(seq) {};
+    static ButtonState searchPattern(int pin, efl::Digital::States newState, efl::Digital::States oldState);
+};
+
+// a ButtonSeqAction to start a particular song
+class MusicSeqAction :
+public ButtonSeqAction {
+    const Phrase *       phrases;    // null terminated arrray of phrases
+    ButtonState action() const {
+        notePlayer.play(phrases, np);
+        return PLAY_MUSIC;
+    }
+public:
+    MusicSeqAction( const Phrase * p, const char* seq)
+        :ButtonSeqAction( seq ),phrases(p) {}
+};
+
+
+extern efl::LL<efl::Timer> bt;
+extern void resetButtonSequenceStates();
+extern ButtonTimer     buttonTimer;
+
 
 #endif // !defined BUTTON_H

@@ -69,5 +69,6 @@ extern const Phrase Seven_Nation_Army[];
 extern const Phrase Toms_Flourish[];
 extern const Phrase Ode_to_Joy[];
 extern const Phrase Up_on_the_Housetop[];
-
+extern NotePlayerTimer notePlayer;
+extern efl::LL<efl::Timer> np;
 #endif //!defined MUSIC_H

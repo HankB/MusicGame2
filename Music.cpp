@@ -221,4 +221,9 @@ const Phrase Up_on_the_Housetop[]  PROGMEM = {
   PHRASE(Up_on_the_Housetop_Notes_1),
   { 0,0} // equivalent to a null terminator
 };
+
+NotePlayerTimer notePlayer(0);
+efl::LL<efl::Timer> np(&notePlayer);
+
+
 #endif // defined ALL
