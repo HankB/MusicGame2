@@ -85,5 +85,9 @@ extern efl::LL<efl::Timer> bt;
 extern void resetButtonSequenceStates();
 extern ButtonTimer     buttonTimer;
 
+ButtonState playHiLoTimer(void);
+ButtonState playHiLoButton( efl::Digital::DigitalBit button );
+void startHiLo(void);
+
 
 #endif // !defined BUTTON_H

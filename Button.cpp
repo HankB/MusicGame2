@@ -116,11 +116,9 @@ bool ButtonTimer::callback(ulong late)
                      resetButtonSequenceStates();
              }
              break;
-#if HI_LO
          case HI_LO_GAME:
              buttonState = playHiLoTimer();
              break;
-#endif             
          case BUTTON_GAME:
              break;
          default:
@@ -129,15 +127,28 @@ bool ButtonTimer::callback(ulong late)
       return true;
 };
 
+// a ButtonSeqAction to start HiLo game
+class HiLoSeqAction :
+public ButtonSeqAction {
+    ButtonState action() const {
+        startHiLo();
+        return HI_LO_GAME;
+    }
+public:
+    HiLoSeqAction( const char* seq)
+        :ButtonSeqAction( seq ){}
+};
+
+static const char hiLoSeq[] = { TL, BL, TR, BR,  0 };
+const HiLoSeqAction playHiLoGame(hiLoSeq);
+
 
 // an array of button sequences that the pattern matcher will search
 // to see if some action should be initiated.
 static const ButtonSeqAction*  sequences[] = {
   &playJingleBells, 
   &playSevenNationArmy,  
-#if HI_LO
   &playHiLoGame,
-#endif
   &playTomsFlourish,
   &playOdeToJoy,
   &playUpOnTheHousetop,

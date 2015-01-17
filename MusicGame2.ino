@@ -36,9 +36,15 @@ class HeartbeatTimer:
 {
   private:
     static const int heartbeatPin = 13;
+    static const int heartbeatPeriod = 500;
+    static const int onTime = 5;
     virtual bool callback(ulong late) {
       heartbeatState ^= 1;
       digitalWrite(heartbeatPin, heartbeatState);
+      if( heartbeatState )
+        setPeriod(onTime);
+      else 
+        setPeriod(heartbeatPeriod-onTime);
       return true;
     };
     bool        heartbeatState;
