@@ -222,6 +222,29 @@ const Phrase Up_on_the_Housetop[]  PROGMEM = {
   { 0,0} // equivalent to a null terminator
 };
 
+#define S3(n) ((n)*5/3)
+static const Note Amazing_1[]  PROGMEM  = {
+  { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) },
+  { NOTE_AF4, S3(eighth) }, { NOTE_G4, S3(dotted_half+eighth) },
+  { REST, S3(half) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, 
+  { NOTE_AF4, S3(quarter) }, { NOTE_G4, S3(eighth) }, { NOTE_F4, S3(eighth) }, { NOTE_EF4, S3(eighth) }, { NOTE_F4, S3(eighth) }, { NOTE_G4, S3(eighth) }, { NOTE_F4, S3(eighth+quarter) },
+  { REST, S3(eighth) }, { NOTE_AF4, S3(quarter) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(eighth) },
+  { NOTE_AF4, S3(eighth) }, { NOTE_BF4, S3(dotted_half+eighth) }, 
+  { REST, S3(eighth) }, { NOTE_BF3, S3(eighth) }, { NOTE_BF3, S3(eighth) }, { NOTE_G4, S3(quarter) }, { NOTE_F4, S3(eighth) }, { NOTE_F4, S3(eighth) }, { NOTE_EF4, S3(eighth) }, 
+  { NOTE_EF4, S3(whole) },
+  { REST, S3(whole) },
+//  { NOTE_AF4, S3(eighth) },
+//  { NOTE_AF4, S3(eighth) }, { NOTE_AF4, S3(quarter) }, { NOTE_G4, S3(quarter) }, { NOTE_G4, S3(quarter) },
+//  { NOTE_F4, S3(quarter) }, { NOTE_EF4, S3(quarter) }, { NOTE_EF4, S3(quarter) }, { NOTE_EF4, S3(quarter) }, { NOTE_F4, S3(quarter) }, { NOTE_G4, S3(quarter) },
+//  { NOTE_F4, S3(eighth) }, { NOTE_EF4, S3(eighth) }, { NOTE_EF4, S3(eighth+half) }, { REST, S3(half) },
+  
+};
+const Phrase Amazing[]  PROGMEM = {
+  PHRASE(Amazing_1),
+  { 0,0} // equivalent to a null terminator
+};
+
+
 NotePlayerTimer notePlayer(0);
 efl::LL<efl::Timer> np(&notePlayer);
 

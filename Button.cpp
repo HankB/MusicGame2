@@ -80,19 +80,22 @@ void setupButtonHandling(void)
 }  
 
 static const char jingleBellSeq[] = { BR, TL, BR, 0};// a button sequence tied to the Jingle Bells composition
-const MusicSeqAction playJingleBells( Jingle_Bells, jingleBellSeq);
+static const MusicSeqAction playJingleBells( Jingle_Bells, jingleBellSeq);
 
 static const char sevenNationArmySeq[] = { TR, BL, 0 };// button sequence that will be used to some other composition
-const MusicSeqAction playSevenNationArmy( Seven_Nation_Army, sevenNationArmySeq);
+static const MusicSeqAction playSevenNationArmy( Seven_Nation_Army, sevenNationArmySeq);
 
 static const char TomsFlourishSeq[] = { TR, TL, 0 };// button sequence that will be used to some other composition
-const MusicSeqAction playTomsFlourish( Toms_Flourish, TomsFlourishSeq);
+static const MusicSeqAction playTomsFlourish( Toms_Flourish, TomsFlourishSeq);
 
 static const char OdeToJoySeq[] = { TR, BR, 0 };// button sequence that will be used to some other composition
-const MusicSeqAction playOdeToJoy( Ode_to_Joy, OdeToJoySeq);
+static const MusicSeqAction playOdeToJoy( Ode_to_Joy, OdeToJoySeq);
 
 static const char UpOnTheHousetopSeq[] = { BL, TR, 0 };// button sequence that will be used to some other composition
-const MusicSeqAction playUpOnTheHousetop( Up_on_the_Housetop, UpOnTheHousetopSeq);
+static const MusicSeqAction playUpOnTheHousetop( Up_on_the_Housetop, UpOnTheHousetopSeq);
+
+static const char AmazingSeq[] = { BL, BL, TR, 0 };// button sequence that will be used to some other composition
+static const MusicSeqAction playAmazing( Amazing, AmazingSeq);
 
 /* 
  * Timer tied to Button inputs serves timing functions for buttons such as timing out a button press and so on.
@@ -140,7 +143,7 @@ public:
 };
 
 static const char hiLoSeq[] = { TL, BL, TR, BR,  0 };
-const HiLoSeqAction playHiLoGame(hiLoSeq);
+static const HiLoSeqAction playHiLoGame(hiLoSeq);
 
 
 // an array of button sequences that the pattern matcher will search
@@ -152,6 +155,7 @@ static const ButtonSeqAction*  sequences[] = {
   &playTomsFlourish,
   &playOdeToJoy,
   &playUpOnTheHousetop,
+  &playAmazing,
 };
 
 
